@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Quote</title>
+    <link rel="shortcut icon" href="https://www.thewholething.net/wp-content/uploads/2017/06/Quotecircle.png" type="image/x-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Box icon -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Tailwindcss CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine JS CDN -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        hindSiliguri: ['Hind Siliguri', 'sans-seri'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="font-hindSiliguri min-h-screen flex justify-center items-center bg-[#5372EF]">
+    <div>
+
+        <div class="shadow-lg p-4 w-80 sm:w-[400px] md:min-w-[450px] lg:max-w-md  bg-white rounded-md">
+            <h1 class="text-center text-2xl mb-4 font-bold">Quote of the Day</h1>
+            <div x-data="quote" x-init="getQuote()">
+                <blockquote class="mb-3" x-text="content">
+                </blockquote>
+                <small id="author" class="text-end block mb-2 before:content-['-'] before:mr-0.5 text-gray-500 hidden"
+                    x-text="author"></small>
+                <div class="flex justify-between items-center">
+                    <!-- <p id="sucess" class="text-green-600 text-sm hidden mb-0">Quote copied to clipboard</p> -->
+                    <button title="Copy to clipboard" id="copyBtn" onclick="copyQuote()"
+                        class="p-3 rounded-full hover:bg-gray-100 bg-gray-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                        </svg>
+                    </button>
+                    <button title="New Quote" x-on:click="getQuote()" class="p-3 rounded-full hover:bg-gray-100 bg-gray-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="border-t pt-3 mt-2 flex border-gray-200 space-x-3">
+                    <a class="border-[#5372ef] rounded-full border w-5 h-5 flex justify-center items-center p-3 text-[#5372EF] hover:bg-[#5372ef] hover:text-gray-50 trasition duration-200"
+                        href="https://facebook.com/codewithnoyon" target="_blank"><i
+                            class='bx bxl-facebook-circle'></i></a>
+                    <a class="border-[#5372ef] rounded-full border w-5 h-5 flex justify-center items-center p-3 text-[#5372EF] hover:bg-[#5372ef] hover:text-gray-50 trasition duration-200"
+                        href="https://linkedin.com/company/codewithnoyon" target="_blank"><i
+                            class='bx bxl-linkedin-square'></i></a>
+                    <a class="border-[#5372ef] rounded-full border w-5 h-5 flex justify-center items-center p-3 text-[#5372EF] hover:bg-[#5372ef] hover:text-gray-50 trasition duration-200"
+                        href="https://instagram.com/codewithnoyon" target="_blank"><i class='bx bxl-instagram'></i></a>
+                    <a class="border-[#5372ef] rounded-full border w-5 h-5 flex justify-center items-center p-3 text-[#5372EF] hover:bg-[#5372ef] hover:text-gray-50 trasition duration-200"
+                        href="https://youtube.com/c/codernoyon" target="_blank"><i class='bx bxl-youtube'></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function copyQuote() {
+            // Get the text field
+            const copyText = document.querySelector('blockquote');
+            const copyBtn = document.querySelector('#copyBtn');
+            // const success = document.querySelector('#sucess');
+            const author = document.querySelector('#author')
+
+
+            // Copy the text inside the text field
+            const copied = navigator.clipboard.writeText(copyText.innerText + ' -' + author.innerText);
+        };
+
+        const quote = {
+            content: '',
+            author: '',
+            getQuote() {
+                fetch('https://api.quotable.io/random')
+                    .then(res => res.json())
+                    .then(data => {
+                        this.content = data.content;
+                        this.author = data.author;
+                        if (data) {
+                            author.classList.remove('hidden')
+                        }
+                    })
+            }
+        }
+
+
+
+    </script>
+</body>
+
+</html>
